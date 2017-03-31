@@ -25,11 +25,6 @@ sourceCompatibility = 1.8
 jar {
     baseName = 'gs-multi-module-library'
 }
-install {
-    repositories.mavenInstaller {
-        pom.artifactId = jar.baseName
-    }
-}
 uploadArchives {
 	repositories.mavenDeployer {
 		pom.artifactId = jar.baseName
