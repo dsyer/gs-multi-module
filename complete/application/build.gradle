@@ -1,20 +1,52 @@
 buildscript {
-    ext { springBootVersion = '1.5.2.RELEASE' }
-    repositories { mavenCentral() }
-    dependencies { classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") }
+    ext {
+      springBootVersion = '1.5.2.RELEASE'
+      wrapperVersion = '1.0.0.BUILD-SNAPSHOT'
+    }
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		maven { url "https://repo.spring.io/snapshot" }
+		maven { url "https://repo.spring.io/milestone" }
+	}
+    dependencies {
+      classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    classpath("org.springframework.boot.experimental:spring-boot-thin-layout:${wrapperVersion}")
+    }
 }
 
 apply plugin: 'java'
+apply plugin: 'maven'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
+task createPom {
+	doLast {
+		pom {
+			project { artifactId jar.baseName }
+			withXml(dependencyManagement.pomConfigurer)
+		}.writeTo("build/resources/main/META-INF/maven/${project.group}/${jar.baseName}/pom.xml")
+	}
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+install {
+    repositories.mavenInstaller {
+        pom.artifactId = jar.baseName
+    }
+}
 jar {
     baseName = 'gs-multi-module-application'
-    version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
 
-repositories { mavenCentral() }
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven { url "https://repo.spring.io/snapshot" }
+	maven { url "https://repo.spring.io/milestone" }
+}
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
@@ -23,3 +55,4 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
+jar.dependsOn = [createPom]
