@@ -23,7 +23,6 @@ apply plugin: 'org.springframework.boot'
 task createPom {
 	doLast {
 		pom {
-			project { artifactId jar.baseName }
 			withXml(dependencyManagement.pomConfigurer)
 		}.writeTo("build/resources/main/META-INF/maven/${project.group}/${jar.baseName}/pom.xml")
 	}
@@ -32,14 +31,6 @@ task createPom {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
-jar {
-    baseName = 'gs-multi-module-application'
-}
-uploadArchives {
-	repositories.mavenDeployer {
-		pom.artifactId = jar.baseName
-	}
-}
 
 repositories {
 	mavenLocal()

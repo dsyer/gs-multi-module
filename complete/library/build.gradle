@@ -10,26 +10,9 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'eclipse'
 
-task createPom {
-	doLast {
-		pom {
-			project { artifactId jar.baseName }
-			withXml(dependencyManagement.pomConfigurer)
-		}
-	}
-}
-
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
-jar {
-    baseName = 'gs-multi-module-library'
-}
-uploadArchives {
-	repositories.mavenDeployer {
-		pom.artifactId = jar.baseName
-	}
-}
 
 repositories { mavenCentral() }
 
